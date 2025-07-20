@@ -21,6 +21,7 @@
   
   #mentor-fab:hover {
     transform: scale(1.1);
+    background-color:lightgoldenrodyellow; 
   }
   
   /* chat window container */
