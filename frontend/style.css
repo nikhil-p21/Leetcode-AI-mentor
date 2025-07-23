@@ -1,132 +1,492 @@
-.chat-body{
+/* ===== for ANIMATIONS ===== */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-3px);
+  }
+  60% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* ===== FLOATING ACTION BUTTON ===== */
+#mentor-fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #ffa116, #ff8c00);
+  color: white;
+  border-radius: 50%;
+  border: none;
+  font-size: 24px;
+  box-shadow: 0 6px 20px rgba(255, 161, 22, 0.4);
+  cursor: pointer;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+#mentor-fab:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 25px rgba(255, 161, 22, 0.6);
+  background: linear-gradient(135deg, #ffb547, #ffa116);
+}
+
+#mentor-fab.fab-active {
+  background: linear-gradient(135deg, #007acc, #0056b3);
+  box-shadow: 0 6px 20px rgba(0, 122, 204, 0.4);
+  transform: rotate(45deg);
+}
+
+#mentor-fab.fab-active:hover {
+  transform: scale(1.1) rotate(50deg);
+  box-shadow: 0 8px 25px rgba(0, 122, 204, 0.6);
+}
+
+/* ===== CHAT WINDOW ===== */
+#mentor-chat-window {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  width: 380px;
+  height: 550px;
+  background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  z-index: 9999;
+  display: none;
+  flex-direction: column;
+  color: #eff1f6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+
+#mentor-chat-window.slide-in {
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+#mentor-chat-window.slide-out {
+  animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ===== CHAT HEADER ===== */
+.chat-header {
+  position: relative;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #3e3e3e, #333);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mentor-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #ffa116, #ff8c00);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  animation: pulse 2s infinite;
+}
+
+.header-text {
+  flex: 1;
+}
+
+.mentor-title {
+  font-weight: bold;
+  font-size: 16px;
+  color: #fff;
+}
+
+.mentor-subtitle {
+  font-size: 12px;
+  color: #bbb;
+  margin-top: 2px;
+}
+
+#mentor-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #eff1f6;
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+#mentor-close-btn:hover {
+  background: rgba(255, 75, 75, 0.8);
+  color: white;
+  transform: rotate(90deg);
+}
+
+/* ===== CHAT BODY ===== */
+.chat-body {
   flex-grow: 1;
   overflow-y: auto;
-  padding: 10px;
+  padding: 20px;
+  scroll-behavior: smooth;
 }
 
-.chat-input-area {
-  padding: 10px;
-  border-top: 1px solid #4a4a4a;
-  display: flex;
+.chat-body::-webkit-scrollbar {
+  width: 4px;
 }
 
-#mentor-input{
-  flex-grow: 1;
-  background-color: #3e3e3e;
-  border: 1px solid #5a5a5a;
-  border-radius: 4px;
-  color: white;
-  padding: 8px;
-  margin-right: 8px;
+.chat-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
 }
 
-#mentor-send-btn {
-  background-color: #ffa116;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0 15px;
-  font-weight: bold;
-  cursor: pointer;
+.chat-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 161, 22, 0.5);
+  border-radius: 2px;
 }
 
-#mentor-send-btn:hover{
-  background-color: #ffb547;
-}
-
+/* ===== MESSAGES ===== */
 .user-message, .ai-message {
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  border-radius: 12px;
-  max-width: 80%;
-  word-wrap: break-word;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 85%;
+  animation: fadeIn 0.4s ease-out;
 }
-
 
 .user-message {
-  background-color: #007acc;
-  color: white;
-  align-self: flex-end; /* Align it to the right */
+  flex-direction: row-reverse;
+  align-self: flex-end;
   margin-left: auto;
 }
 
 .ai-message {
-  background-color: #3e3e3e;
-  color: #eff1f6bf;
-  align-self: flex-start; /* Align it to the left */
+  align-self: flex-start;
 }
 
-/* floating action button */
-#mentor-fab {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    background-color: #ffa116; /* LeetCode's orange */
-    color: white;
-    border-radius: 50%;
-    border: none;
-    font-size: 24px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    cursor: pointer;
-    z-index: 1000; /* To ensure on top of other elements */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  #mentor-fab:hover {
-    transform: scale(1.1);
-    background-color:#ffb547; 
-  }
-  
-  /* chat window container */
+.message-content {
+  background: linear-gradient(135deg, #007acc, #0056b3);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 18px;
+  word-wrap: break-word;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 122, 204, 0.3);
+}
+
+.ai-message .message-content {
+  background: linear-gradient(135deg, #404040, #2a2a2a);
+  color: #eff1f6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.message-content p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #ffa116, #ff8c00);
+}
+
+.user-avatar {
+  background: linear-gradient(135deg, #007acc, #0056b3);
+}
+
+/* ===== SPECIAL MESSAGE TYPES ===== */
+.problem-info {
+  background: linear-gradient(135deg, rgba(255, 161, 22, 0.1), rgba(255, 140, 0, 0.05));
+  border: 1px solid rgba(255, 161, 22, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.problem-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.problem-header h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.difficulty-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.problem-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  background: rgba(255, 255, 255, 0.1);
+  color: #bbb;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.warning-message, .error-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.warning-message {
+  background: rgba(255, 161, 22, 0.1);
+  border: 1px solid rgba(255, 161, 22, 0.3);
+  color: #ffa116;
+}
+
+.error-message {
+  background: rgba(255, 55, 95, 0.1);
+  border: 1px solid rgba(255, 55, 95, 0.3);
+  color: #ff375f;
+}
+
+/* ===== TYPING INDICATORS ===== */
+.thinking-animation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.thinking-dots, .typing-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.thinking-dots span, .typing-dots span {
+  width: 8px;
+  height: 8px;
+  background: #ffa116;
+  border-radius: 50%;
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+.thinking-dots span:nth-child(2), .typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.thinking-dots span:nth-child(3), .typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.typing-indicator {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: rgba(255, 161, 22, 0.1);
+  border-radius: 8px;
+  margin-top: 8px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.typing-text {
+  font-size: 12px;
+  color: #ffa116;
+}
+
+/* ===== INPUT AREA ===== */
+.chat-input-area {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within {
+  border-color: #ffa116;
+  box-shadow: 0 0 0 2px rgba(255, 161, 22, 0.2);
+}
+
+#mentor-input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  outline: none;
+  font-size: 14px;
+}
+
+#mentor-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+#mentor-send-btn {
+  background: linear-gradient(135deg, #ffa116, #ff8c00);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+}
+
+#mentor-send-btn:hover {
+  background: linear-gradient(135deg, #ffb547, #ffa116);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 161, 22, 0.4);
+}
+
+#mentor-send-btn.sending {
+  background: linear-gradient(135deg, #666, #555);
+  animation: pulse 1s infinite;
+  cursor: not-allowed;
+}
+
+.send-icon {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+#mentor-send-btn:hover .send-icon {
+  transform: translateX(2px);
+}
+
+/* ===== UTILITY CLASSES ===== */
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 480px) {
   #mentor-chat-window {
-    position: fixed;
-    bottom: 100px;
-    right: 30px;
-    width: 350px;
-    height: 500px;
-    background-color: #282828; /* LeetCode's dark theme background */
-    border: 1px solid #4a4a4a;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    z-index: 1000;
-    display: none; /* Initially hidden */
-    flex-direction: column;
-    color: #eff1f6bf;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-  }
-  
-  /* simple header for the chat window */
-  .chat-header {
-    position: relative; 
-    padding: 10px;
-    background-color: #3e3e3e;
-    font-weight: bold;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    text-align: center;
-  }
-
-
-  #mentor-close-btn {
-    position: absolute; 
-    top: 5px;
+    width: calc(100vw - 20px);
     right: 10px;
-    background: none;
-    border: none;
-    color: #eff1f6bf; 
-    font-size: 20px;
-    cursor: pointer;
-    font-weight: bold;
+    left: 10px;
+    height: 500px;
   }
   
-  #mentor-close-btn:hover {
-    color: white;
+  #mentor-fab {
+    right: 20px;
+    bottom: 20px;
   }
-  
+}
