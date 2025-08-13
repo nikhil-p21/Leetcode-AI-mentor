@@ -292,7 +292,7 @@
   background: linear-gradient(135deg, rgba(255, 161, 22, 0.1), rgba(255, 140, 0, 0.05));
   border: 1px solid rgba(255, 161, 22, 0.3);
   border-radius: 12px;
-  padding: 16px;
+  padding: 8px 10px;
   margin-bottom: 16px;
   animation: fadeIn 0.5s ease-out;
 }
@@ -322,6 +322,28 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.4s ease,
+              margin-top 0.4s ease;
+}
+
+.problem-tags.visible {
+  max-height: 200px; 
+  opacity: 1;
+  margin-top: 8px;
+}
+
+.problem-tags.hidden {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+}
+
+.tags-section {
+  margin-top: 12px;
 }
 
 .tag {
@@ -331,6 +353,25 @@
   border-radius: 8px;
   font-size: 11px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tags-toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #bbb;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.tags-toggle-btn:hover {
+  background-color: rgba(255, 161, 22, 0.2);
+  color: #ffa116;
+  border-color: #ffa116;
 }
 
 .warning-message, .error-message {

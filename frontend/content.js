@@ -160,16 +160,13 @@ async function handleSendMessage(){
   const messageText = input.value.trim(); 
   if(messageText=='' || !currentProblemSlug) return; 
 
-  // Add send button animation
   sendBtn.classList.add('sending');
   
   addMessage(messageText, 'user');
   input.value = ''; 
 
-  // Show typing indicator instead of thinking message
   typingIndicator.style.display = 'flex';
   
-  // Add a small delay for better UX
   setTimeout(async () => {
     try{
       const response = await fetch('http://127.0.0.1:8000/api/chat',{
@@ -258,12 +255,24 @@ async function fetchProblemDataFromBackend(){
               ${data.difficulty}
             </span>
           </div>
-          <div class="problem-tags">
-            ${data.topicTags.map(tag => `<span class="tag">${tag.name}</span>`).join('')}
-          </div>
+          <div class="tags-section">
+          <button class="tags-toggle-btn"> 🏷️ Show Tags</button>
+            <div class="problem-tags hidden">
+              ${data.topicTags.map(tag => `<span class="tag">${tag.name}</span>`).join('')}
+            </div>
+          </div>  
         `;
         
         chatBody.appendChild(problemInfoDiv);
+        const tagButton = problemInfoDiv.querySelector(".tags-toggle-btn"); 
+        const tagDiv = problemInfoDiv.querySelector(".problem-tags"); 
+        // show tags on clicking the tag button 
+        tagButton.addEventListener('click',() => {
+          const wasVisible = tagDiv.classList.contains('visible');
+  
+          tagDiv.classList.replace(wasVisible ? 'visible' : 'hidden', wasVisible ? 'hidden' : 'visible');
+          tagButton.textContent = `🏷️ ${wasVisible ? 'Show' : 'Hide'} Tags`;
+        }); 
         chatBody.scrollTop = chatBody.scrollHeight;
         
     } catch(error) {
