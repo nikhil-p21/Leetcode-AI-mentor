@@ -15,6 +15,14 @@ window.MentorEvents = (function () {
     // Close chat window
     closeBtn.addEventListener("click", () => {
       chatWindow.classList.add("slide-out");
+      fab.classList.remove("fab-active");
+
+      // Update FAB text when chat closes via close button
+      window.MentorUI.updateFABText("Need help?");
+
+      // Reset FAB animation
+      fab.style.animation = "fabPulse 3s infinite ease-in-out";
+
       setTimeout(() => {
         chatWindow.style.display = "none";
         chatWindow.classList.remove("slide-out");
@@ -30,33 +38,32 @@ window.MentorEvents = (function () {
         chatWindow.classList.add("slide-in");
         fab.classList.add("fab-active");
 
+        // Update FAB text when chat opens
+        window.MentorUI.updateFABText("Let's solve this!");
+
+        // Add bounce animation to FAB
+        fab.style.animation = "fabBounce 0.6s ease-out";
+        setTimeout(() => {
+          fab.style.animation = "fabPulse 3s infinite ease-in-out";
+        }, 600);
+
+        // Get current problem slug for API calls
         const pathParts = window.location.pathname.split("/");
         const newProblemSlug = pathParts[2];
 
-        if (
-          newProblemSlug &&
-          (newProblemSlug !== currentProblemSlug ||
-            !chatWindow.querySelector(".problem-info"))
-        ) {
-          currentProblemSlug = newProblemSlug;
-          const result = await window.MentorAPI.fetchProblemDataFromBackend(
-            newProblemSlug
-          );
-          if (result && result.error === "paid_problem") {
-            window.MentorUI.displayWarning(
-              "I can only help with free problems at the moment"
-            );
-          } else if (result && !result.error) {
-            window.MentorUI.displayProblemInfo(result);
-          } else if (result?.error) {
-            window.MentorUI.displayError(result.message);
-          }
-        } else if (newProblemSlug) {
+        if (newProblemSlug) {
           currentProblemSlug = newProblemSlug;
         }
       } else {
         chatWindow.classList.add("slide-out");
         fab.classList.remove("fab-active");
+
+        // Update FAB text when chat closes
+        window.MentorUI.updateFABText("Need help?");
+
+        // Reset FAB animation when closing
+        fab.style.animation = "fabPulse 3s infinite ease-in-out";
+
         setTimeout(() => {
           chatWindow.style.display = "none";
           chatWindow.classList.remove("slide-out");

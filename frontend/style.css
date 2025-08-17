@@ -76,13 +76,13 @@
   position: fixed;
   bottom: 30px;
   right: 30px;
-  width: 60px;
+  width: auto;
+  min-width: 60px;
   height: 60px;
   background: linear-gradient(135deg, #ffa116, #ff8c00);
   color: white;
-  border-radius: 50%;
+  border-radius: 30px;
   border: none;
-  font-size: 24px;
   box-shadow: 0 6px 20px rgba(255, 161, 22, 0.4);
   cursor: pointer;
   z-index: 10000;
@@ -91,23 +91,171 @@
   align-items: center;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
+  padding: 0 20px;
+  animation: fabPulse 3s infinite ease-in-out;
+}
+
+@keyframes fabPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 6px 20px rgba(255, 161, 22, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 161, 22, 0.6);
+  }
+}
+
+@keyframes fabBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-8px) scale(1.05);
+  }
+  60% {
+    transform: translateY(-4px) scale(1.02);
+  }
+}
+
+@keyframes eyeBlink {
+  0%, 90%, 100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes helpTextSlide {
+  0%, 20% {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  30%, 70% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  80%, 100% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
+.fab-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.robot-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.robot-eyes {
+  display: flex;
+  gap: 6px;
+}
+
+.eye {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  position: relative;
+  animation: eyeBlink 4s infinite;
+}
+
+.pupil {
+  width: 4px;
+  height: 4px;
+  background: #333;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pupilMove 6s infinite ease-in-out;
+}
+
+@keyframes pupilMove {
+  0%, 100% { transform: translate(-50%, -50%); }
+  25% { transform: translate(-70%, -50%); }
+  50% { transform: translate(-30%, -50%); }
+  75% { transform: translate(-50%, -70%); }
+}
+
+.robot-mouth {
+  width: 12px;
+  height: 6px;
+  border: 2px solid white;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  animation: mouthMove 5s infinite ease-in-out;
+}
+
+@keyframes mouthMove {
+  0%, 100% { 
+    border-radius: 0 0 12px 12px;
+    transform: scaleX(1);
+  }
+  50% { 
+    border-radius: 0 0 8px 8px;
+    transform: scaleX(0.8);
+  }
+}
+
+.help-text {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 1;
+  transition: all 0.3s ease;
 }
 
 #mentor-fab:hover {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.1);
   box-shadow: 0 8px 25px rgba(255, 161, 22, 0.6);
   background: linear-gradient(135deg, #ffb547, #ffa116);
+  border-radius: 30px;
+  animation: none;
+}
+
+#mentor-fab:hover .help-text {
+  transform: scale(1.05);
+  color: #fff;
+}
+
+#mentor-fab:hover .robot-eyes .eye {
+  animation: eyeBlink 1s infinite;
+}
+
+#mentor-fab:hover .robot-mouth {
+  animation: mouthMove 2s infinite ease-in-out;
 }
 
 #mentor-fab.fab-active {
   background: linear-gradient(135deg, #007acc, #0056b3);
   box-shadow: 0 6px 20px rgba(0, 122, 204, 0.4);
-  transform: rotate(45deg);
+  animation: none;
 }
 
 #mentor-fab.fab-active:hover {
-  transform: scale(1.1) rotate(50deg);
+  transform: scale(1.1);
   box-shadow: 0 8px 25px rgba(0, 122, 204, 0.6);
+}
+
+#mentor-fab.fab-active .robot-face {
+  animation: robotHappy 0.5s ease-out;
+}
+
+@keyframes robotHappy {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(5deg) scale(1.1); }
+  100% { transform: rotate(0deg) scale(1); }
 }
 
 /* ===== CHAT WINDOW ===== */
@@ -118,9 +266,11 @@
   width: 380px;
   height: 550px;
   background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 161, 22, 0.2);
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 
+              0 0 0 1px rgba(255, 161, 22, 0.1),
+              0 0 20px rgba(255, 161, 22, 0.1);
   z-index: 9999;
   display: none;
   flex-direction: column;
@@ -144,8 +294,8 @@
 .chat-header {
   position: relative;
   padding: 16px 20px;
-  background: linear-gradient(135deg, #3e3e3e, #333);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(255, 161, 22, 0.1), rgba(255, 140, 0, 0.05));
+  border-bottom: 1px solid rgba(255, 161, 22, 0.2);
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
 }
@@ -168,6 +318,92 @@
   animation: pulse 2s infinite;
 }
 
+/* Small robot face for header */
+.robot-face-small {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.robot-eyes-small {
+  display: flex;
+  gap: 4px;
+}
+
+.eye-small {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  position: relative;
+  animation: eyeBlink 4s infinite;
+}
+
+.pupil-small {
+  width: 3px;
+  height: 3px;
+  background: #333;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pupilMove 6s infinite ease-in-out;
+}
+
+.robot-mouth-small {
+  width: 8px;
+  height: 4px;
+  border: 1.5px solid white;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  animation: mouthMove 5s infinite ease-in-out;
+}
+
+/* Tiny robot face for message avatars */
+.robot-face-tiny {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.robot-eyes-tiny {
+  display: flex;
+  gap: 2px;
+}
+
+.eye-tiny {
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  position: relative;
+  animation: eyeBlink 4s infinite;
+}
+
+.pupil-tiny {
+  width: 2px;
+  height: 2px;
+  background: #333;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pupilMove 6s infinite ease-in-out;
+}
+
+.robot-mouth-tiny {
+  width: 6px;
+  height: 3px;
+  border: 1px solid white;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  animation: mouthMove 5s infinite ease-in-out;
+}
+
 .header-text {
   flex: 1;
 }
@@ -180,8 +416,9 @@
 
 .mentor-subtitle {
   font-size: 12px;
-  color: #bbb;
+  color: #ffa116;
   margin-top: 2px;
+  font-weight: 500;
 }
 
 #mentor-close-btn {
@@ -281,99 +518,15 @@
   font-size: 16px;
   flex-shrink: 0;
   background: linear-gradient(135deg, #ffa116, #ff8c00);
+  box-shadow: 0 2px 8px rgba(255, 161, 22, 0.3);
 }
 
 .user-avatar {
   background: linear-gradient(135deg, #007acc, #0056b3);
+  box-shadow: 0 2px 8px rgba(0, 122, 204, 0.3);
 }
 
 /* ===== SPECIAL MESSAGE TYPES ===== */
-.problem-info {
-  background: linear-gradient(135deg, rgba(255, 161, 22, 0.1), rgba(255, 140, 0, 0.05));
-  border: 1px solid rgba(255, 161, 22, 0.3);
-  border-radius: 12px;
-  padding: 8px 10px;
-  margin-bottom: 16px;
-  animation: fadeIn 0.5s ease-out;
-}
-
-.problem-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.problem-header h3 {
-  margin: 0;
-  color: #fff;
-  font-size: 16px;
-}
-
-.difficulty-badge {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: bold;
-  color: white;
-}
-
-.problem-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.4s ease,
-              margin-top 0.4s ease;
-}
-
-.problem-tags.visible {
-  max-height: 200px; 
-  opacity: 1;
-  margin-top: 8px;
-}
-
-.problem-tags.hidden {
-  max-height: 0;
-  opacity: 0;
-  margin-top: 0;
-}
-
-.tags-section {
-  margin-top: 12px;
-}
-
-.tag {
-  background: rgba(255, 255, 255, 0.1);
-  color: #bbb;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 11px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.tags-toggle-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #bbb;
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-bottom: 8px;
-}
-
-.tags-toggle-btn:hover {
-  background-color: rgba(255, 161, 22, 0.2);
-  color: #ffa116;
-  border-color: #ffa116;
-}
-
 .warning-message, .error-message {
   display: flex;
   align-items: center;
@@ -443,8 +596,8 @@
 /* ===== INPUT AREA ===== */
 .chat-input-area {
   padding: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border-top: 1px solid rgba(255, 161, 22, 0.2);
+  background: linear-gradient(135deg, rgba(255, 161, 22, 0.05), rgba(255, 140, 0, 0.02));
 }
 
 .input-wrapper {
@@ -453,7 +606,7 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 161, 22, 0.2);
   transition: all 0.3s ease;
 }
 
